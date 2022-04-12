@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Club</title>
+
+    <link rel="stylesheet" th:href="@{/styles.css}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/bootstrap5.css}" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+
+<form method="POST" th:action="@{/register}" id="registerForm">
+    <h2>Register</h2>
+    <label for="username">Username: </label>
+    <input type="text" name="username"/><br/>
+
+    <label for="password">Password: </label>
+    <input type="password" name="password"/><br/>
+
+    <label for="confirm">Confirm password: </label>
+    <input type="password" name="confirm"/><br/>
+
+    <label for="fullname">Full name: </label>
+    <input type="text" name="fullname"/><br/>
+
+    <label for="phone">Phone: </label>
+    <input type="text" name="phone"/><br/>
+
+    <input type="submit" value="Register"/>
+</form>
+
+</body>
+</html>

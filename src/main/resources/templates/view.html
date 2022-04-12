@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<title>Club</title>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/bootstrap5.css}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+<header class="page-header">
+
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Club Name</a>
+            </div>
+            <div class="collapse navbar-collapse" id="mynavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/new}">
+                            <img th:src="@{images/new.png}" width="25px" height="25px" alt="new" title="new">
+                            New
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/view}">
+                            <img th:src="@{images/view.png}" width="25px" height="25px" alt="view" title="view">
+                            View all
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/stat}">
+                            <img th:src="@{images/stat.png}" width="30px" height="30px" alt="stat" title="stat">
+                            Statistics
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+    <form th:action="@{/view}" method="GET" id="search">
+        <div class="mb-3 mt-3">
+            <input type="text" class="col-sm-3" name="keyword" id="keyword" size="50" th:value="${keyword}" placeholder="Search for name.." />
+            <input type="submit" class="btn btn-dark" value="Search"/>
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" th:name="inactive" th:checked="${inactive}"/>
+                Search Inactive
+            </label>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Money</th>
+            <th>Registration Date</th>
+<!--            <th><a th:href="@{/view(param=4)}" th:value="${order}" style="text-decoration: none;color:inherit;">Expiry Date</a></th>-->
+            <th>Expiry Date</th>
+            <th>Period</th>
+            <th>Type</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="view : ${views}">
+            <td th:text="${view.name}"/>
+            <td th:text="${view.mobileno}"/>
+            <td th:text="${view.money}"/>
+            <td th:text="${view.date}"/>
+            <td th:text="${view.expiry}"/>
+            <td th:text="${view.period}"/>
+            <div th:switch="${view.type}">
+                <td th:case="true" th:text="Member"/>
+                <td th:case="false" th:text="'One Time'"/>
+            </div>
+            <div>
+                <td>
+                    <a th:if="${view.type == true}" th:href="@{/renew/{id}(id=${view.id})}">
+                        <img src="images/renew.png" width="30px" height="30px" alt="renew" title="renew">
+                    </a>
+                    <a th:if="${view.type == false}">
+                        <img src="images/cantrenew.png" width="30px" height="30px" alt="can't renew" title="can't renew">
+                    </a>
+                    <a th:href="@{/details/{id}(id=${view.id})}">
+                        <img src="images/details.png" width="30px" height="30px" alt="show details" title="show details">
+                    </a>
+                    <a th:href="@{/edit/{id}(id=${view.id})}">
+                        <img src="images/edit.png" width="30px" height="30px" alt="edit" title="edit">
+                    </a>
+                    <a th:href="@{/checkout/{id}(id=${view.id})}">
+                        <img src="images/checkout.png" width="30px" height="30px" alt="checkout" title="checkout">
+                    </a>
+                    <a href="">
+                        <img src="images/delete.png" width="30px" height="30px" alt="delete" title="delete">
+                    </a>
+
+                </td>
+            </div>
+        </tr>
+        </tbody>
+
+    </table>
+</div>
+
+<!--<div th:if="${totalPages > 0}"></div>-->
+<!--<div class="row col-sm-10">-->
+<!--    <div class="col-sm-2">Pages</div>-->
+<!--    <div class="col-sm-1 page-item">-->
+<!--        <div class="col-sm-1 page-item">-->
+<!--            <a th:if="${currentPage==0}" >Previous</a>-->
+<!--            <a th:if="${currentPage!=0}" th:href="@{/view(pageNo=${currentPage - 1})}">Previous</a>-->
+
+<!--        </div>-->
+
+
+<!--    </div>-->
+<div class="container mt-3" th:if="${inactive==false}">
+    <div class="container">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage==0}" style="color: inherit;">First</a>
+                <a class="page-link" th:if="${currentPage!=0}" th:href="@{/view(pageNo=0)}">First</a>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage==0}" style="color: inherit;">Previous</a>
+                <a class="page-link" th:if="${currentPage!=0}" th:href="@{/view(pageNo=${currentPage - 1})}">Previous</a>
+            </li>
+
+
+            <span th:each="i: ${#numbers.sequence(0,totalPages-1)}">
+                    <li class="page-item" th:if="${currentPage!=i}">
+                        <a class="page-link" th:href="@{/view(pageNo=${i})}">[[${i+1}]]</a>
+                    </li>
+                    <li class="page-item" th:unless="${currentPage!=i}">
+                        <a class="page-link" style="color: inherit;">[[${i+1}]]</a>
+                    </li>
+                </span>
+            </li>
+
+
+            <li class="page-item" th:if="${currentPage < totalPages-1}">
+                <a class="page-link" th:href="@{/view(pageNo=${currentPage + 1})}">Next</a>
+            </li>
+            <li class="page-item" th:unless="${currentPage < totalPages}">
+                <a class="page-link" style="color: inherit;">Next</a>
+            </li>
+
+            <li class="page-item" th:if="${currentPage < totalPages-1}">
+                <a class="page-link"  th:href="@{/view(pageNo=${totalPages-1})}">Last</a>
+            </li>
+            <li class="page-item" th:unless="${currentPage < totalPages-1}">
+                <a class="page-link" style="color: inherit;" th:unless="${currentPage < totalPages-1}">Last</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="container mt-3" th:if="*{inactive==true}">
+    <div class="container">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage==0}" style="color: inherit;">First</a>
+                <a class="page-link" th:if="${currentPage!=0}" th:href="@{/view(pageNo=0, inactive=true)}">First</a>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage==0}" style="color: inherit;">Previous</a>
+                <a class="page-link" th:if="${currentPage!=0}" th:href="@{/view(pageNo=${currentPage - 1}, inactive=true)}">Previous</a>
+            </li>
+
+
+            <span th:each="i: ${#numbers.sequence(0,totalPages-1)}">
+                    <li class="page-item" th:if="${currentPage!=i}">
+                        <a class="page-link" th:href="@{/view(pageNo=${i}, inactive=true)}">[[${i+1}]]</a>
+                    </li>
+                    <li class="page-item" th:unless="${currentPage!=i}">
+                        <a class="page-link" style="color: inherit;">[[${i+1}]]</a>
+                    </li>
+                </span>
+            </li>
+
+
+            <li class="page-item" th:if="${currentPage < totalPages-1}">
+                <a class="page-link" th:href="@{/view(pageNo=${currentPage + 1}, inactive=true)}">Next</a>
+            </li>
+            <li class="page-item" th:unless="${currentPage < totalPages}">
+                <a class="page-link" style="color: inherit;">Next</a>
+            </li>
+
+            <li class="page-item" th:if="${currentPage < totalPages-1}">
+                <a class="page-link"  th:href="@{/view(pageNo=${totalPages-1}, inactive=true)}">Last</a>
+            </li>
+            <li class="page-item" th:unless="${currentPage < totalPages-1}">
+                <a class="page-link" style="color: inherit;" th:unless="${currentPage < totalPages-1}">Last</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
