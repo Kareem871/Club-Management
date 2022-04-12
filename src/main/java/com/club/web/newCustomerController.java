@@ -32,12 +32,12 @@ public class newCustomerController {
         }
         log.info(nc + "\nReceived Type: " + nc.getType() );
         log.info("\nReal Type: " + nr.findByNameAndActive(nc.getName(), nc.getType()));
-        if (nc.getType() == true && nc.getPeriod() <= 0){
+        if (nc.getType() && nc.getPeriod() <= 0){
             model.addAttribute("periodError", "Period can't be 0 or less");
             return "new";
         }
 
-        if (nr.findByNameAndActive(nc.getName(), nc.getType()) == null || nc.getType() != true) {
+        if (nr.findByCountNameAndActive(nc.getName(), nc.getType()) == 0 || !nc.getType()) {
             if (nc.getType()) nc.setExpiry(nc.getDate().plusMonths(nc.getPeriod()));
             if (!nc.getType()) nc.setExpiry(nc.getDate());
             nr.save(nc);
