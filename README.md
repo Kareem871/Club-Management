@@ -1,3 +1,5 @@
+# Frameworks:
+Spring Boot, Thymeleaf, Bootstrap
 # Business Rules:
 - There is only admin users
 - Two types of clients, member or not member
